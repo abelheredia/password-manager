@@ -9,6 +9,8 @@ export const usePasswords = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
+
   const [action, setAction] = useState<'create' | 'edit'>('create');
 
   const [passwordsData, setPasswordsData] = useState<Password[]>([]);
@@ -89,10 +91,21 @@ export const usePasswords = () => {
 
   const handleCancel = () => {
     setIsModalOpen(false);
+    setIsModalDeleteOpen(false);
   };
 
-  const handleDelete = (id: string) => {
-    deletePassword(id);
+  const handleDelete = () => {
+    deletePassword(passwordForm.getValues('id'));
+    setIsModalDeleteOpen(false);
+  };
+
+  const confirmDelete = (item: Password) => {
+    const { id, description } = item;
+
+    passwordForm.setValue('id', id);
+    passwordForm.setValue('description', description);
+
+    setIsModalDeleteOpen(true);
   };
 
   useEffect(() => {
@@ -114,6 +127,8 @@ export const usePasswords = () => {
     handleDelete,
     searchPasswordForm,
     searchPassword,
-    passwordsData
+    passwordsData,
+    isModalDeleteOpen,
+    confirmDelete
   };
 };

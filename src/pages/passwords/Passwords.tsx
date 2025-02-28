@@ -7,8 +7,19 @@ import { TextField } from '../../components';
 const { Title } = Typography;
 
 export const Passwords = () => {
-  const { passwordsData, isModalOpen, showModal, handleOk, handleCancel, passwordForm, showModalEdit, handleDelete, searchPasswordForm } =
-    usePasswords();
+  const {
+    passwordsData,
+    isModalOpen,
+    showModal,
+    handleOk,
+    handleCancel,
+    passwordForm,
+    showModalEdit,
+    handleDelete,
+    searchPasswordForm,
+    isModalDeleteOpen,
+    confirmDelete
+  } = usePasswords();
 
   const PASSWORD_COLUMNS_ACTIONS: TableProps<Password>['columns'] = [
     ...PASSWORD_COLUMNS,
@@ -29,7 +40,7 @@ export const Passwords = () => {
             color="red"
             variant="dashed"
             onClick={() => {
-              handleDelete(item.id);
+              confirmDelete(item);
             }}
           >
             Eliminar
@@ -47,15 +58,6 @@ export const Passwords = () => {
           <TextField hookForm={searchPasswordForm} name="description" label="Buscar" />
           <Button variant="outlined" color="primary" onClick={showModal}>
             Agregar
-          </Button>
-          <Button
-            variant="outlined"
-            color="green"
-            onClick={() => {
-              console.log('Exportar');
-            }}
-          >
-            Exportar
           </Button>
         </div>
       </div>
@@ -75,6 +77,20 @@ export const Passwords = () => {
           <TextField hookForm={passwordForm} name="user" label="Usuario" />
           <TextField hookForm={passwordForm} name="email" label="Email" />
           <TextField hookForm={passwordForm} name="password" label="Contraseña" />
+        </div>
+      </Modal>
+      <Modal
+        title="Eliminar Password"
+        open={isModalDeleteOpen}
+        onOk={handleDelete}
+        onCancel={handleCancel}
+        cancelText="Cancelar"
+        okText="Eliminar"
+        centered
+        width={350}
+      >
+        <div className="flex flex-col gap-3 my-5">
+          <p>¿Estás seguro que deseas eliminar el password de {passwordForm.watch('description')}?</p>
         </div>
       </Modal>
     </div>
