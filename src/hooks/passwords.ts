@@ -11,6 +11,8 @@ export const usePasswords = () => {
 
   const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
 
+  const [isModalJSONOpen, setIsModalJSONOpen] = useState(false);
+
   const [action, setAction] = useState<'create' | 'edit'>('create');
 
   const [passwordsData, setPasswordsData] = useState<Password[]>([]);
@@ -33,6 +35,13 @@ export const usePasswords = () => {
     }
   });
 
+  const JSONForm = useForm({
+    mode: 'onChange',
+    defaultValues: {
+      json: ''
+    }
+  });
+
   const searchPassword = () => {
     const filteredPasswords = passwords.filter((password) => {
       const { description } = searchPasswordForm.getValues();
@@ -47,6 +56,11 @@ export const usePasswords = () => {
     setAction('create');
     passwordForm.reset();
     setIsModalOpen(true);
+  };
+
+  const showModalJSON = () => {
+    JSONForm.reset();
+    setIsModalJSONOpen(true);
   };
 
   const showModalEdit = (item: Password) => {
@@ -92,6 +106,26 @@ export const usePasswords = () => {
   const handleCancel = () => {
     setIsModalOpen(false);
     setIsModalDeleteOpen(false);
+    setIsModalJSONOpen(false);
+  };
+
+  const handleOkJSON = () => {
+    const { json } = JSONForm.getValues();
+
+    const { passwords } = JSON.parse(json);
+
+    for (const password of passwords) {
+      createPassword({
+        id: nanoid(),
+        key: nanoid(),
+        description: password.description,
+        user: password.user,
+        email: password.email,
+        password: password.password
+      });
+    }
+
+    setIsModalJSONOpen(false);
   };
 
   const handleDelete = () => {
@@ -129,6 +163,10 @@ export const usePasswords = () => {
     searchPassword,
     passwordsData,
     isModalDeleteOpen,
-    confirmDelete
+    confirmDelete,
+    isModalJSONOpen,
+    JSONForm,
+    handleOkJSON,
+    showModalJSON
   };
 };
