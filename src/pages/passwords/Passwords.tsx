@@ -55,8 +55,8 @@ export const Passwords = () => {
   ];
 
   return (
-    <div className="p-10">
-      <div className="flex justify-between items-center mb-3">
+    <div className="p-10 w-[100vh]">
+      <div className="flex justify-between items-center mb-3 w-full">
         <Title level={3}>Passwords</Title>
         <div className="flex gap-3">
           <TextField hookForm={searchPasswordForm} name="description" label="Buscar" />
