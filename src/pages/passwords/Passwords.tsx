@@ -56,10 +56,10 @@ export const Passwords = () => {
 
   return (
     <div className="p-10 w-[100vw]">
-      <div className="flex justify-between items-center mb-3 w-full">
+      <div className="flex flex-col justify-between mb-3 w-full">
         <Title level={3}>Passwords</Title>
-        <div className="flex gap-3">
-          <TextField hookForm={searchPasswordForm} name="description" label="Buscar" />
+        <div className="grid grid-cols-2 gap-3">
+          <TextField hookForm={searchPasswordForm} name="description" label="Buscar" className="col-span-2" />
           <Button variant="outlined" color="primary" onClick={showModal}>
             Agregar
           </Button>
