@@ -5,14 +5,17 @@ export const PASSWORD_COLUMNS = [
   },
   {
     title: 'Usuario',
-    dataIndex: 'user'
+    dataIndex: 'user',
+    responsive: ['md']
   },
   {
     title: 'Email',
-    dataIndex: 'email'
+    dataIndex: 'email',
+    responsive: ['md']
   },
   {
     title: 'Password',
-    dataIndex: 'password'
+    dataIndex: 'password',
+    responsive: ['md']
   }
 ];

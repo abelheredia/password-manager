@@ -26,7 +26,7 @@ export const Passwords = () => {
   } = usePasswords();
 
   const PASSWORD_COLUMNS_ACTIONS: TableProps<Password>['columns'] = [
-    ...PASSWORD_COLUMNS,
+    ...(PASSWORD_COLUMNS as []),
     {
       title: '',
       render: (item) => (
@@ -55,7 +55,7 @@ export const Passwords = () => {
   ];
 
   return (
-    <div className="p-10 w-[100vh]">
+    <div className="p-10 w-[100vw]">
       <div className="flex justify-between items-center mb-3 w-full">
         <Title level={3}>Passwords</Title>
         <div className="flex gap-3">
