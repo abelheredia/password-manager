@@ -3,6 +3,8 @@ import { useForm } from 'react-hook-form';
 import { usePasswordsStore } from '../stores';
 import { Password } from '../types';
 import { nanoid } from 'nanoid';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 
 export const usePasswords = () => {
   const { passwords, createPassword, updatePassword, deletePassword } = usePasswordsStore();
@@ -17,29 +19,46 @@ export const usePasswords = () => {
 
   const [passwordsData, setPasswordsData] = useState<Password[]>([]);
 
+  const schema = yup.object().shape({
+    description: yup.string().required('Descripción es requerida'),
+    user: yup.string().required('Usuario es requerido'),
+    email: yup.string().email('Email inválido').required('Email es requerido'),
+    password: yup.string().required('La contraseña es requerida')
+  });
+
   const passwordForm = useForm<Password>({
-    mode: 'onChange',
+    mode: 'all',
     defaultValues: {
       id: '',
+      key: '',
       description: '',
       user: '',
       email: '',
       password: ''
-    }
+    },
+    resolver: yupResolver(schema)
   });
 
   const searchPasswordForm = useForm({
-    mode: 'onChange',
+    mode: 'all',
     defaultValues: {
       description: ''
     }
   });
 
+  const JSONschema = yup.object().shape({
+    json: yup
+      .string()
+      .required('Passwords son requeridos')
+      .matches(/^\[.*\]$/, 'Formato de passwords inválido')
+  });
+
   const JSONForm = useForm({
-    mode: 'onChange',
+    mode: 'all',
     defaultValues: {
       json: ''
-    }
+    },
+    resolver: yupResolver(JSONschema)
   });
 
   const searchPassword = () => {
@@ -78,29 +97,31 @@ export const usePasswords = () => {
   };
 
   const handleOk = () => {
-    const { id, description, user, email, password } = passwordForm.getValues();
+    passwordForm.handleSubmit(() => {
+      const { id, description, user, email, password } = passwordForm.getValues();
 
-    if (action === 'edit') {
-      updatePassword({
-        id,
-        key: nanoid(),
-        description,
-        user,
-        email,
-        password
-      });
-    } else {
-      createPassword({
-        id: nanoid(),
-        key: nanoid(),
-        description,
-        user,
-        email,
-        password
-      });
-    }
+      if (action === 'edit') {
+        updatePassword({
+          id,
+          key: nanoid(),
+          description,
+          user,
+          email,
+          password
+        });
+      } else {
+        createPassword({
+          id: nanoid(),
+          key: nanoid(),
+          description,
+          user,
+          email,
+          password
+        });
+      }
 
-    setIsModalOpen(false);
+      setIsModalOpen(false);
+    })();
   };
 
   const handleCancel = () => {
@@ -110,36 +131,43 @@ export const usePasswords = () => {
   };
 
   const handleOkJSON = () => {
-    const { json } = JSONForm.getValues();
+    JSONForm.handleSubmit(() => {
+      const { json } = JSONForm.getValues();
 
-    const { passwords } = JSON.parse(json);
+      const passwords = JSON.parse(json);
 
-    for (const password of passwords) {
-      createPassword({
-        id: nanoid(),
-        key: nanoid(),
-        description: password.description,
-        user: password.user,
-        email: password.email,
-        password: password.password
-      });
-    }
+      for (const password of passwords) {
+        createPassword({
+          id: nanoid(),
+          key: nanoid(),
+          description: password.description,
+          user: password.user,
+          email: password.email,
+          password: password.password
+        });
+      }
 
-    setIsModalJSONOpen(false);
+      setIsModalJSONOpen(false);
+    })();
   };
 
   const handleDelete = () => {
-    deletePassword(passwordForm.getValues('id'));
+    deletePassword(passwordForm.getValues('id') as string);
     setIsModalDeleteOpen(false);
   };
 
-  const confirmDelete = (item: Password) => {
+  const onConfirmDelete = (item: Password) => {
     const { id, description } = item;
 
     passwordForm.setValue('id', id);
     passwordForm.setValue('description', description);
 
     setIsModalDeleteOpen(true);
+  };
+
+  const onCopyJSON = () => {
+    const json = JSON.stringify(passwordsData, null, 2);
+    navigator.clipboard.writeText(json);
   };
 
   useEffect(() => {
@@ -163,10 +191,11 @@ export const usePasswords = () => {
     searchPassword,
     passwordsData,
     isModalDeleteOpen,
-    confirmDelete,
+    onConfirmDelete,
     isModalJSONOpen,
     JSONForm,
     handleOkJSON,
-    showModalJSON
+    showModalJSON,
+    onCopyJSON
   };
 };

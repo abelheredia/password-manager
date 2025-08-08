@@ -18,11 +18,12 @@ export const Passwords = () => {
     handleDelete,
     searchPasswordForm,
     isModalDeleteOpen,
-    confirmDelete,
+    onConfirmDelete,
     isModalJSONOpen,
     JSONForm,
     handleOkJSON,
-    showModalJSON
+    showModalJSON,
+    onCopyJSON
   } = usePasswords();
 
   const PASSWORD_COLUMNS_ACTIONS: TableProps<Password>['columns'] = [
@@ -44,7 +45,7 @@ export const Passwords = () => {
             color="red"
             variant="dashed"
             onClick={() => {
-              confirmDelete(item);
+              onConfirmDelete(item);
             }}
           >
             Eliminar
@@ -59,12 +60,15 @@ export const Passwords = () => {
       <div className="flex flex-col justify-between mb-3 w-full">
         <Title level={3}>Passwords</Title>
         <div className="grid grid-cols-2 gap-3">
-          <TextField hookForm={searchPasswordForm} name="description" label="Buscar" className="col-span-2" />
+          <TextField hookForm={searchPasswordForm} name="description" label="Buscar" />
           <Button variant="outlined" color="primary" onClick={showModal}>
             Agregar
           </Button>
           <Button variant="outlined" color="primary" onClick={showModalJSON}>
-            Agregar JSON
+            Agregar Varios Passwords
+          </Button>
+          <Button variant="outlined" color="primary" onClick={onCopyJSON}>
+            Copiar JSON
           </Button>
         </div>
       </div>
@@ -87,7 +91,7 @@ export const Passwords = () => {
         </div>
       </Modal>
       <Modal
-        title="Agregar JSON"
+        title="Agregar Varios Passwords"
         open={isModalJSONOpen}
         onOk={handleOkJSON}
         onCancel={handleCancel}
@@ -97,7 +101,7 @@ export const Passwords = () => {
         width={350}
       >
         <div className="flex flex-col gap-3 my-5">
-          <TextArea hookForm={JSONForm} name="json" label="JSON" />
+          <TextArea hookForm={JSONForm} name="json" label="Passwords" />
         </div>
       </Modal>
       <Modal
