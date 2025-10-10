@@ -22,11 +22,12 @@ export const usePasswords = () => {
   const schema = yup.object().shape({
     description: yup.string().required('Descripción es requerida'),
     user: yup.string().required('Usuario es requerido'),
-    email: yup.string().email('Email inválido').required('Email es requerido'),
+    email: yup.string().email('Email inválido'),
     password: yup.string().required('La contraseña es requerida')
   });
 
-  const passwordForm = useForm<Password>({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const passwordForm = useForm<any>({
     mode: 'all',
     defaultValues: {
       id: '',

@@ -3,6 +3,6 @@ export interface Password {
   id?: string;
   description: string;
   user: string;
-  email: string;
+  email?: string;
   password: string;
 }
