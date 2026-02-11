@@ -1,2 +1,2 @@
+export * from './auth';
 export * from './passwords';
-export * from './routes';

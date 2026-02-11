@@ -1,15 +1,13 @@
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
+import { Suspense } from 'react';
+import { Spin } from 'antd';
 
 export const App = () => {
-  const { pathname } = useLocation();
-
-  if (pathname === '/') {
-    return <Navigate to="/passwords" />;
-  }
-
   return (
     <main>
-      <Outlet />
+      <Suspense fallback={<Spin size="large" />}>
+        <Outlet />
+      </Suspense>
     </main>
   );
 };
