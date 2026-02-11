@@ -20,7 +20,9 @@ const storeApi: StateCreator<PasswordsState> = (set) => ({
 
   updatePassword: (password) =>
     set((state) => ({
-      passwords: state.passwords.map((p) => (p.id === password.id ? password : p))
+      passwords: state.passwords.map((p) =>
+        p.id === password.id ? password : p
+      )
     })),
 
   deletePassword: (id) =>
@@ -34,4 +36,6 @@ const storeApi: StateCreator<PasswordsState> = (set) => ({
     }))
 });
 
-export const usePasswordsStore = create<PasswordsState>()(persist(storeApi, { name: 'passwords' }));
+export const usePasswordsStore = create<PasswordsState>()(
+  persist(storeApi, { name: 'passwords' })
+);
