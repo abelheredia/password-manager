@@ -6,7 +6,7 @@ import axios, {
 import { ApiResponse } from './types/api';
 
 const api: AxiosInstance = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:3030/api',
+  baseURL: process.env.REACT_APP_API_URL,
   headers: {
     'Content-Type': 'application/json'
   },
@@ -15,10 +15,17 @@ const api: AxiosInstance = axios.create({
 
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token = localStorage.getItem('token');
+    const storage = JSON.parse(localStorage.getItem('profile') as string);
+    if (storage) {
+      const {
+        state: {
+          profile: { token }
+        }
+      } = storage;
 
-    if (token && config.headers) {
-      config.headers.Authorization = `Bearer ${token}`;
+      if (token && config.headers) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
     }
 
     return config;
@@ -38,10 +45,7 @@ api.interceptors.response.use(
 
       switch (status) {
         case 401:
-          localStorage.removeItem('token');
-          if (!window.location.pathname.includes('/login')) {
-            window.location.href = '/login';
-          }
+          console.log('Error de sesión');
           break;
         case 403:
           console.error('No tienes permisos para esta acción');

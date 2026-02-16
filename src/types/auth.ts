@@ -21,6 +21,11 @@ export interface AuthResponse {
 }
 
 export interface Profile {
+  user: { id: number; username: string; iat: number; exp: number };
+  token: string;
+}
+
+export interface User {
   id: number;
   username: string;
   iat: number;

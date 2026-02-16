@@ -1,9 +1,10 @@
-import { Table, Typography, Button, Modal, TableProps } from 'antd';
+import { Table, Typography, Button, Modal, TableProps, Alert } from 'antd';
 import { Password } from '../../types';
 import { PASSWORD_COLUMNS } from '../../constants';
 import { usePasswords } from '../../hooks';
 import { TextField } from '../../components';
 import { Head } from '../../components/Head';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 
 const { Title } = Typography;
 
@@ -20,7 +21,11 @@ export const Passwords = () => {
     searchPasswordForm,
     isModalDeleteOpen,
     onConfirmDelete,
-    action
+    action,
+    loading,
+    loadingModal,
+    alert,
+    showAlert
   } = usePasswords();
 
   const PASSWORD_COLUMNS_ACTIONS: TableProps<Password>['columns'] = [
@@ -29,24 +34,26 @@ export const Passwords = () => {
       title: '',
       render: (item) => (
         <div className="flex gap-3">
-          <Button
-            color="primary"
-            variant="dashed"
-            onClick={() => {
-              showModalEdit(item);
-            }}
-          >
-            Editar
-          </Button>
-          <Button
-            color="red"
-            variant="dashed"
-            onClick={() => {
-              onConfirmDelete(item);
-            }}
-          >
-            Eliminar
-          </Button>
+          {item.main === 0 && (
+            <>
+              <Button
+                color="primary"
+                variant="dashed"
+                onClick={() => {
+                  showModalEdit(item);
+                }}
+                icon={<EditOutlined />}
+              />
+              <Button
+                color="red"
+                variant="dashed"
+                onClick={() => {
+                  onConfirmDelete(item);
+                }}
+                icon={<DeleteOutlined />}
+              />
+            </>
+          )}
         </div>
       )
     }
@@ -71,6 +78,8 @@ export const Passwords = () => {
       <Table<Password>
         dataSource={passwordsData}
         columns={PASSWORD_COLUMNS_ACTIONS}
+        loading={loading}
+        rowKey="id"
       />
       <Modal
         title={`${action === 'create' ? 'Agregar' : 'Editar'} Password`}
@@ -81,6 +90,7 @@ export const Passwords = () => {
         okText="Guardar"
         centered
         width={350}
+        loading={loadingModal}
       >
         <div className="flex flex-col gap-3 my-5">
           <TextField
@@ -106,6 +116,7 @@ export const Passwords = () => {
         okText="Eliminar"
         centered
         width={350}
+        loading={loadingModal}
       >
         <div className="flex flex-col gap-3 my-5">
           <p>
@@ -114,6 +125,13 @@ export const Passwords = () => {
           </p>
         </div>
       </Modal>
+      {showAlert && (
+        <Alert
+          message={alert.message}
+          type={alert.type}
+          style={{ position: 'absolute', bottom: 50 }}
+        />
+      )}
     </div>
   );
 };

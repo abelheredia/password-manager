@@ -4,14 +4,20 @@ import { Password } from '../types';
 
 interface PasswordsState {
   passwords: Password[];
+  setPasswords: (passwords: Password[]) => void;
   createPassword: (password: Password) => void;
   updatePassword: (password: Password) => void;
-  deletePassword: (id: string) => void;
+  deletePassword: (id: number) => void;
   readPasswords: () => void;
 }
 
 const storeApi: StateCreator<PasswordsState> = (set) => ({
   passwords: [],
+
+  setPasswords: (passwords) =>
+    set(() => ({
+      passwords
+    })),
 
   createPassword: (password) =>
     set((state) => ({

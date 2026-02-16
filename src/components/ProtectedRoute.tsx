@@ -4,7 +4,7 @@ import { useAuth } from '../hooks';
 export const ProtectedRoute = () => {
   const { profile } = useAuth();
 
-  if (!profile.username || profile.exp < Date.now() / 1000) {
+  if (!profile.token) {
     return <Navigate to="/login" replace />;
   }
 

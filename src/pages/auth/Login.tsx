@@ -36,6 +36,7 @@ export const Login = () => {
               hookForm={loginForm}
               name="password"
               label="Contraseña"
+              type="password"
             />
             <div className="text-right">
               <Button
