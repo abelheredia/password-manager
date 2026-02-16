@@ -1,33 +1,35 @@
 import api from '../api';
 import { ApiResponse } from '../types/api';
-import { Password } from '../types';
+import { Password, PasswordResponse } from '../types';
+import { passwordAdapter } from '../adapters/passwords';
 
 export const passwordService = {
   getAll: async (): Promise<Password[]> => {
-    const response = await api.get<ApiResponse<Password[]>>('/passwords');
-    return response.data.data;
+    const response =
+      await api.get<ApiResponse<PasswordResponse[]>>('/passwords');
+    return passwordAdapter(response.data.data);
   },
 
-  create: async (passwordData: Omit<Password, 'id'>): Promise<Password> => {
-    const response = await api.post<ApiResponse<Password>>(
-      '/passwords',
-      passwordData
-    );
-    return response.data.data;
+  create: async (
+    passwordData: Omit<Password, 'id' | 'main'>
+  ): Promise<ApiResponse> => {
+    const response = await api.post<ApiResponse>('/passwords', passwordData);
+    return response.data;
   },
 
   update: async (
     id: number,
     passwordData: Partial<Password>
-  ): Promise<Password> => {
-    const response = await api.put<ApiResponse<Password>>(
+  ): Promise<ApiResponse> => {
+    const response = await api.put<ApiResponse>(
       `/passwords/${id}`,
       passwordData
     );
-    return response.data.data;
+    return response.data;
   },
 
-  delete: async (id: number): Promise<void> => {
-    await api.delete<ApiResponse<null>>(`/passwords/${id}`);
+  delete: async (id: number): Promise<ApiResponse> => {
+    const response = await api.delete<ApiResponse>(`/passwords/${id}`);
+    return response.data;
   }
 };
