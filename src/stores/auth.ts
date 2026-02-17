@@ -6,18 +6,16 @@ import { jwtDecode } from 'jwt-decode';
 interface AuthState {
   profile: Profile;
   setProfile: (token: string) => void;
+  clearProfile: () => void;
 }
 
+const initialProfile: Profile = {
+  user: { id: 0, username: '', iat: 0, exp: 0 },
+  token: ''
+};
+
 const storeApi: StateCreator<AuthState> = (set) => ({
-  profile: {
-    user: {
-      id: 0,
-      username: '',
-      iat: 0,
-      exp: 0
-    },
-    token: ''
-  },
+  profile: initialProfile,
 
   setProfile: (token) => {
     const decode = jwtDecode<User>(token);
@@ -27,9 +25,11 @@ const storeApi: StateCreator<AuthState> = (set) => ({
         token
       }
     }));
-  }
+  },
+
+  clearProfile: () => set({ profile: initialProfile })
 });
 
 export const useAuthStore = create<AuthState>()(
-  persist(storeApi, { name: 'profile' })
+  persist(storeApi, { name: 'profile-storage' })
 );

@@ -13,7 +13,8 @@ export const useAuth = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { alert, showAlert, displayAlert } = useAlert();
-  const { setProfile, profile } = useAuthStore();
+  const { profile, setProfile, clearProfile } = useAuthStore();
+  const isHydrated = useAuthStore.persist.hasHydrated();
 
   const handleGoToRegister = () => {
     navigate(ROUTES.REGISTER);
@@ -84,6 +85,7 @@ export const useAuth = () => {
   };
 
   const handleLogout = () => {
+    clearProfile();
     localStorage.clear();
     handleGoToLogin();
   };
@@ -101,6 +103,7 @@ export const useAuth = () => {
     showAlert,
     alert,
     handleLogout,
-    profile
+    profile,
+    isInitializing: !isHydrated
   };
 };
