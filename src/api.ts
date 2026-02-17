@@ -15,7 +15,9 @@ const api: AxiosInstance = axios.create({
 
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const storage = JSON.parse(localStorage.getItem('profile') as string);
+    const storage = JSON.parse(
+      localStorage.getItem('profile-storage') as string
+    );
     if (storage) {
       const {
         state: {
