@@ -4,7 +4,7 @@ import { PASSWORD_COLUMNS } from '../../constants';
 import { usePasswords } from '../../hooks';
 import { TextField } from '../../components';
 import { Head } from '../../components/Head';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { CopyOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 
 const { Title } = Typography;
 
@@ -25,7 +25,8 @@ export const Passwords = () => {
     loading,
     loadingModal,
     alert,
-    showAlert
+    showAlert,
+    onCopyPassword
   } = usePasswords();
 
   const PASSWORD_COLUMNS_ACTIONS: TableProps<Password>['columns'] = [
@@ -36,6 +37,14 @@ export const Passwords = () => {
         <div className="flex gap-3">
           {item.main === 0 && (
             <>
+              <Button
+                color="cyan"
+                variant="dashed"
+                onClick={() => {
+                  onCopyPassword(item);
+                }}
+                icon={<CopyOutlined />}
+              />
               <Button
                 color="primary"
                 variant="dashed"

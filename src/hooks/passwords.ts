@@ -186,6 +186,11 @@ export const usePasswords = () => {
     setIsModalDeleteOpen(true);
   };
 
+  const onCopyPassword = (item: Password) => {
+    navigator.clipboard.writeText(item.password);
+    displayAlert('Contraseña copiada al portapapeles', 'success');
+  };
+
   useEffect(() => {
     if (passwords.length === 0) {
       getPasswords();
@@ -224,6 +229,7 @@ export const usePasswords = () => {
     alert,
     showAlert,
     loadingModal,
-    setLoadingModal
+    setLoadingModal,
+    onCopyPassword
   };
 };
