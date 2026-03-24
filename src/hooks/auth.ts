@@ -57,7 +57,11 @@ export const useAuth = () => {
     resolver: yupResolver(registerSchema)
   });
 
-  const handleLogin = async () => {
+  const handleLogin = () => {
+    loginForm.handleSubmit(onLogin)();
+  };
+
+  const onLogin = async () => {
     setLoading(true);
     try {
       const { token } = await authService.login(loginForm.getValues());
@@ -72,7 +76,11 @@ export const useAuth = () => {
     }
   };
 
-  const handleRegister = async () => {
+  const handleRegister = () => {
+    registerForm.handleSubmit(onRegister)();
+  };
+
+  const onRegister = async () => {
     setLoading(true);
     try {
       const response = await authService.register(registerForm.getValues());

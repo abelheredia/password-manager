@@ -6,7 +6,7 @@ const { Title, Text } = Typography;
 export const Login = () => {
   const {
     handleGoToRegister,
-    handleGoToForgotPassword,
+    // handleGoToForgotPassword,
     loginForm,
     handleLogin,
     loading,
@@ -38,7 +38,7 @@ export const Login = () => {
               label="Contraseña"
               type="password"
             />
-            <div className="text-right">
+            {/* <div className="text-right">
               <Button
                 type="link"
                 className="p-0 text-xs"
@@ -46,7 +46,7 @@ export const Login = () => {
               >
                 ¿Olvidaste tu contraseña?
               </Button>
-            </div>
+            </div> */}
           </div>
 
           <Button
