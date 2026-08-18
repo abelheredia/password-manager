@@ -43,6 +43,7 @@ export const Register = () => {
             hookForm={registerForm}
             name="password"
             label="Contraseña"
+            type="password"
           />
 
           <Button

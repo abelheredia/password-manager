@@ -27,14 +27,25 @@ export const TextField: React.FC<TextFieldProps> = ({
       control={hookForm.control}
       render={({ field }) => (
         <>
-          <Input
-            {...field}
-            value={field.value}
-            placeholder={label}
-            variant="filled"
-            className={className}
-            type={type}
-          />
+          {type === 'password' ? (
+            <Input.Password
+              {...field}
+              value={field.value}
+              placeholder={label}
+              variant="filled"
+              className={className}
+              visibilityToggle={{ visible: !field.value }}
+            />
+          ) : (
+            <Input
+              {...field}
+              value={field.value}
+              placeholder={label}
+              variant="filled"
+              className={className}
+              type={type}
+            />
+          )}
           <Text style={{ fontSize: '10px' }} type="danger">
             {errors[name]?.message}
           </Text>

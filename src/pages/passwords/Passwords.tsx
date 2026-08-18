@@ -1,6 +1,5 @@
-import { Table, Typography, Button, Modal, TableProps, Alert } from 'antd';
+import { Typography, Button, Modal, Alert, Card } from 'antd';
 import { Password } from '../../types';
-import { PASSWORD_COLUMNS } from '../../constants';
 import { usePasswords } from '../../hooks';
 import { TextField } from '../../components';
 import { Head } from '../../components/Head';
@@ -29,47 +28,16 @@ export const Passwords = () => {
     onCopyPassword
   } = usePasswords();
 
-  const PASSWORD_COLUMNS_ACTIONS: TableProps<Password>['columns'] = [
-    ...(PASSWORD_COLUMNS as []),
-    {
-      title: '',
-      render: (item) => (
-        <div className="flex gap-3">
-          {item.main === 0 && (
-            <>
-              <Button
-                color="cyan"
-                variant="dashed"
-                onClick={() => {
-                  onCopyPassword(item);
-                }}
-                icon={<CopyOutlined />}
-              />
-              <Button
-                color="primary"
-                variant="dashed"
-                onClick={() => {
-                  showModalEdit(item);
-                }}
-                icon={<EditOutlined />}
-              />
-              <Button
-                color="red"
-                variant="dashed"
-                onClick={() => {
-                  onConfirmDelete(item);
-                }}
-                icon={<DeleteOutlined />}
-              />
-            </>
-          )}
-        </div>
-      )
-    }
+  const PASSWORD_ACTIONS: (password: Password) => React.ReactNode[] = (
+    password
+  ) => [
+    <CopyOutlined onClick={() => onCopyPassword(password)} key="copy" />,
+    <EditOutlined onClick={() => showModalEdit(password)} key="edit" />,
+    <DeleteOutlined onClick={() => onConfirmDelete(password)} key="delete" />
   ];
 
   return (
-    <div className="p-10 w-[100vw]">
+    <div className="p-10 w-[calc(100vw - 5rem)]">
       <div className="flex flex-col justify-between mb-3 w-full">
         <Head />
         <Title level={3}>Passwords</Title>
@@ -84,12 +52,29 @@ export const Passwords = () => {
           </Button>
         </div>
       </div>
-      <Table<Password>
-        dataSource={passwordsData}
-        columns={PASSWORD_COLUMNS_ACTIONS}
-        loading={loading}
-        rowKey="id"
-      />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+        {passwordsData.map((password) => (
+          <Card
+            loading={loading}
+            actions={
+              password.description !== 'Password Manager'
+                ? PASSWORD_ACTIONS(password)
+                : []
+            }
+            key={password.id}
+          >
+            <Card.Meta
+              title={password.description}
+              description={
+                <>
+                  <p>{password.user}</p>
+                  <p>{password.email}</p>
+                </>
+              }
+            />
+          </Card>
+        ))}
+      </div>
       <Modal
         title={`${action === 'create' ? 'Agregar' : 'Editar'} Password`}
         open={isModalOpen}
@@ -113,6 +98,7 @@ export const Passwords = () => {
             hookForm={passwordForm}
             name="password"
             label="Contraseña"
+            type="password"
           />
         </div>
       </Modal>
@@ -138,7 +124,7 @@ export const Passwords = () => {
         <Alert
           message={alert.message}
           type={alert.type}
-          style={{ position: 'absolute', bottom: 50 }}
+          style={{ position: 'fixed', bottom: 50 }}
         />
       )}
     </div>
