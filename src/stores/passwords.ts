@@ -1,4 +1,3 @@
-import { persist } from 'zustand/middleware';
 import { type StateCreator, create } from 'zustand';
 import { Password } from '../types';
 
@@ -42,6 +41,4 @@ const storeApi: StateCreator<PasswordsState> = (set) => ({
     }))
 });
 
-export const usePasswordsStore = create<PasswordsState>()(
-  persist(storeApi, { name: 'passwords' })
-);
+export const usePasswordsStore = create<PasswordsState>()(storeApi);
