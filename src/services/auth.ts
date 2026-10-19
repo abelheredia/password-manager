@@ -3,16 +3,18 @@ import { ApiResponse } from '../types/api';
 import { LoginCredentials, AuthResponse, RegisterData } from '../types/auth';
 
 export const authService = {
-  login: async (credentials: LoginCredentials): Promise<AuthResponse> => {
+  login: async (
+    credentials: LoginCredentials
+  ): Promise<ApiResponse<AuthResponse>> => {
     const response = await api.post<ApiResponse<AuthResponse>>(
       '/auth/login',
       credentials
     );
-    return response.data.data;
+    return response.data;
   },
 
   register: async (userData: RegisterData): Promise<string> => {
-    const response = await api.post<ApiResponse<null>>(
+    const response = await api.post<ApiResponse<string>>(
       '/auth/registro',
       userData
     );
@@ -20,7 +22,7 @@ export const authService = {
   },
 
   forgotPassword: async (email: string): Promise<string> => {
-    const response = await api.post<ApiResponse<null>>(
+    const response = await api.post<ApiResponse<string>>(
       '/auth/forgot-password',
       { email }
     );

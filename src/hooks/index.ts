@@ -1,2 +1,2 @@
-export * from './passwords';
-export * from './auth';
+export * from './usePasswords';
+export * from './useAuth';
