@@ -6,15 +6,23 @@ import { loginSchema, registerSchema, forgotPasswordSchema } from '../schemas';
 import { useState } from 'react';
 import { LoginCredentials, RegisterData } from '../types';
 import { authService } from '../services';
-import { useAlert } from './alert';
+import { useAlert } from './useAlert';
 import { useAuthStore } from '../stores';
 
 export const useAuth = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { alert, showAlert, displayAlert } = useAlert();
+  const { alert, showAlert, displayAlert, displayErrorAlert } = useAlert();
   const { profile, setProfile, clearProfile } = useAuthStore();
   const isHydrated = useAuthStore.persist.hasHydrated();
+
+  const profileForm = useForm({
+    mode: 'all',
+    defaultValues: {
+      username: '',
+      emaial: ''
+    }
+  });
 
   const handleGoToRegister = () => {
     navigate(ROUTES.REGISTER);
@@ -64,13 +72,16 @@ export const useAuth = () => {
   const onLogin = async () => {
     setLoading(true);
     try {
-      const { token } = await authService.login(loginForm.getValues());
-      displayAlert('Login exitoso', 'success', () => {
+      const {
+        data: { token },
+        message
+      } = await authService.login(loginForm.getValues());
+      displayAlert(message, 'success', () => {
         setProfile(token);
         navigate(ROUTES.PASSWORDS);
       });
     } catch (error) {
-      displayAlert(`Error en login: ${error}`, 'error');
+      displayErrorAlert(error);
     } finally {
       setLoading(false);
     }
@@ -86,7 +97,7 @@ export const useAuth = () => {
       const response = await authService.register(registerForm.getValues());
       displayAlert(`Registro exitoso: ${response}`, 'success');
     } catch (error) {
-      displayAlert(`Error en registro: ${error}`, 'error');
+      displayErrorAlert(error);
     } finally {
       setLoading(false);
     }
@@ -112,6 +123,7 @@ export const useAuth = () => {
     alert,
     handleLogout,
     profile,
-    isInitializing: !isHydrated
+    isInitializing: !isHydrated,
+    profileForm
   };
 };

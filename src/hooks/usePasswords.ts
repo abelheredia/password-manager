@@ -5,7 +5,7 @@ import { Password } from '../types';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { passwordSchema } from '../schemas';
 import { passwordService } from '../services';
-import { useAlert } from './alert';
+import { useAlert } from './useAlert';
 
 export const usePasswords = () => {
   const {
@@ -28,7 +28,7 @@ export const usePasswords = () => {
 
   const [loadingModal, setLoadingModal] = useState<boolean>(false);
 
-  const { alert, showAlert, displayAlert } = useAlert();
+  const { alert, showAlert, displayAlert, displayErrorAlert } = useAlert();
 
   const passwordForm = useForm({
     mode: 'all',
@@ -56,7 +56,7 @@ export const usePasswords = () => {
       setPasswordsData(response);
       setPasswords(response);
     } catch (error) {
-      displayAlert(`Error al listar: ${error}`, 'error');
+      displayErrorAlert(error);
     } finally {
       setLoading(false);
     }
@@ -140,10 +140,7 @@ export const usePasswords = () => {
           }
         }
       } catch (error) {
-        displayAlert(
-          `Error al ${action === 'create' ? 'crear' : 'editar'} password: ${error}`,
-          'error'
-        );
+        displayErrorAlert(error);
       } finally {
         handleFinally();
       }
@@ -171,7 +168,7 @@ export const usePasswords = () => {
         displayAlert(message, 'success');
       }
     } catch (error) {
-      displayAlert(`Error al eliminar: ${error}`, 'error');
+      displayErrorAlert(error);
     } finally {
       handleFinally();
     }

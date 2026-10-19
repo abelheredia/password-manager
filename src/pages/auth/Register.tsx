@@ -26,7 +26,7 @@ export const Register = () => {
           </Text>
         </div>
 
-        <form className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3">
           <TextField hookForm={registerForm} name="nombre" label="Nombre" />
           <TextField hookForm={registerForm} name="apellido" label="Apellido" />
           <TextField
@@ -62,7 +62,7 @@ export const Register = () => {
               Inicia sesión
             </Button>
           </div>
-        </form>
+        </div>
       </Card>
       {showAlert && (
         <Alert

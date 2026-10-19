@@ -1,16 +1,12 @@
-import { useAuth } from '../hooks';
-import { Typography, Button } from 'antd';
+import { Typography } from 'antd';
 const { Title } = Typography;
+import { Profile } from './Profile';
 
 export const Head = () => {
-  const { profile, handleLogout } = useAuth();
-
   return (
-    <div className="flex justify-between items-center mb-3 w-full">
-      <Title level={2}>{profile.user.username} 🙂</Title>
-      <Button color="red" variant="solid" onClick={handleLogout}>
-        Cerrar Sesión
-      </Button>
+    <div className="flex justify-between items-center mb-3 w-full gap-2">
+      <Title level={4}>Password Manager 🔐</Title>
+      <Profile />
     </div>
   );
 };
